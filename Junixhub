@@ -1,0 +1,443 @@
+--// JUNIX HUB - Compact GUI
+--// Roblox Studio / LocalScript
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+--// Remove old GUI
+local old = PlayerGui:FindFirstChild("JUNIX_HUB")
+if old then
+	old:Destroy()
+end
+
+--// Theme
+local BG = Color3.fromRGB(8, 14, 24)
+local PANEL = Color3.fromRGB(13, 22, 36)
+local PANEL2 = Color3.fromRGB(17, 29, 46)
+local BLUE = Color3.fromRGB(0, 130, 255)
+local BLUE2 = Color3.fromRGB(30, 160, 255)
+local WHITE = Color3.fromRGB(235, 242, 255)
+local GRAY = Color3.fromRGB(145, 160, 180)
+local GREEN = Color3.fromRGB(0, 220, 120)
+
+--// ScreenGui
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "JUNIX_HUB"
+Gui.ResetOnSpawn = false
+Gui.IgnoreGuiInset = true
+Gui.Parent = PlayerGui
+
+--// Main window
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.Size = UDim2.new(0, 760, 0, 470)
+Main.Position = UDim2.new(0.5, -380, 0.5, -235)
+Main.BackgroundColor3 = BG
+Main.BorderSizePixel = 0
+Main.Parent = Gui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 12)
+MainCorner.Parent = Main
+
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = BLUE
+Stroke.Transparency = 0.35
+Stroke.Thickness = 1
+Stroke.Parent = Main
+
+--// Top bar
+local Top = Instance.new("Frame")
+Top.Size = UDim2.new(1, 0, 0, 68)
+Top.BackgroundColor3 = Color3.fromRGB(7, 13, 23)
+Top.BorderSizePixel = 0
+Top.Parent = Main
+
+local TopCorner = Instance.new("UICorner")
+TopCorner.CornerRadius = UDim.new(0, 12)
+TopCorner.Parent = Top
+
+--// Logo
+local Logo = Instance.new("TextLabel")
+Logo.Size = UDim2.new(0, 48, 0, 48)
+Logo.Position = UDim2.new(0, 14, 0, 10)
+Logo.BackgroundColor3 = BLUE
+Logo.Text = "JH"
+Logo.TextColor3 = WHITE
+Logo.TextSize = 18
+Logo.Font = Enum.Font.GothamBold
+Logo.Parent = Top
+
+local LogoCorner = Instance.new("UICorner")
+LogoCorner.CornerRadius = UDim.new(0, 10)
+LogoCorner.Parent = Logo
+
+--// Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(0, 220, 0, 28)
+Title.Position = UDim2.new(0, 75, 0, 10)
+Title.BackgroundTransparency = 1
+Title.Text = "JUNIX HUB"
+Title.TextColor3 = WHITE
+Title.TextSize = 24
+Title.Font = Enum.Font.GothamBold
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Top
+
+local Subtitle = Instance.new("TextLabel")
+Subtitle.Size = UDim2.new(0, 220, 0, 20)
+Subtitle.Position = UDim2.new(0, 76, 0, 36)
+Subtitle.BackgroundTransparency = 1
+Subtitle.Text = "Simple • Fast • Powerful"
+Subtitle.TextColor3 = GRAY
+Subtitle.TextSize = 12
+Subtitle.Font = Enum.Font.Gotham
+Subtitle.TextXAlignment = Enum.TextXAlignment.Left
+Subtitle.Parent = Top
+
+--// Online status
+local Status = Instance.new("TextLabel")
+Status.Size = UDim2.new(0, 100, 0, 32)
+Status.Position = UDim2.new(0.5, -50, 0, 18)
+Status.BackgroundColor3 = PANEL2
+Status.Text = "●  Online"
+Status.TextColor3 = GREEN
+Status.TextSize = 13
+Status.Font = Enum.Font.GothamMedium
+Status.Parent = Top
+
+local StatusCorner = Instance.new("UICorner")
+StatusCorner.CornerRadius = UDim.new(1, 0)
+StatusCorner.Parent = Status
+
+--// Close
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 38, 0, 38)
+Close.Position = UDim2.new(1, -50, 0, 15)
+Close.BackgroundTransparency = 1
+Close.Text = "×"
+Close.TextColor3 = BLUE2
+Close.TextSize = 30
+Close.Font = Enum.Font.Gotham
+Close.Parent = Top
+
+Close.MouseButton1Click:Connect(function()
+	Gui.Enabled = false
+end)
+
+--// Sidebar
+local Side = Instance.new("Frame")
+Side.Size = UDim2.new(0, 145, 1, -68)
+Side.Position = UDim2.new(0, 0, 0, 68)
+Side.BackgroundColor3 = Color3.fromRGB(9, 17, 29)
+Side.BorderSizePixel = 0
+Side.Parent = Main
+
+--// Sidebar buttons
+local buttons = {
+	{"⌂", "Home"},
+	{"✿", "Farming"},
+	{"▣", "Shop"},
+	{"◉", "Eggs"},
+	{"◆", "Teleports"},
+	{"⚙", "Settings"}
+}
+
+local function createSideButton(index, icon, text)
+	local Button = Instance.new("TextButton")
+	Button.Size = UDim2.new(1, -18, 0, 42)
+	Button.Position = UDim2.new(0, 9, 0, 15 + ((index - 1) * 48))
+	Button.BackgroundColor3 = index == 1 and BLUE or Color3.fromRGB(9, 17, 29)
+	Button.BorderSizePixel = 0
+	Button.Text = icon .. "   " .. text
+	Button.TextColor3 = WHITE
+	Button.TextSize = 14
+	Button.Font = Enum.Font.GothamMedium
+	Button.TextXAlignment = Enum.TextXAlignment.Left
+	Button.Parent = Side
+
+	local Corner = Instance.new("UICorner")
+	Corner.CornerRadius = UDim.new(0, 8)
+	Corner.Parent = Button
+
+	Button.MouseButton1Click:Connect(function()
+		for _, child in ipairs(Side:GetChildren()) do
+			if child:IsA("TextButton") then
+				child.BackgroundColor3 = Color3.fromRGB(9, 17, 29)
+			end
+		end
+		Button.BackgroundColor3 = BLUE
+	end)
+end
+
+for i, data in ipairs(buttons) do
+	createSideButton(i, data[1], data[2])
+end
+
+--// Center content
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(0, 425, 1, -83)
+Content.Position = UDim2.new(0, 155, 0, 78)
+Content.BackgroundTransparency = 1
+Content.Parent = Main
+
+--// Banner
+local Banner = Instance.new("Frame")
+Banner.Size = UDim2.new(1, 0, 0, 90)
+Banner.BackgroundColor3 = PANEL
+Banner.BorderSizePixel = 0
+Banner.Parent = Content
+
+local BannerCorner = Instance.new("UICorner")
+BannerCorner.CornerRadius = UDim.new(0, 10)
+BannerCorner.Parent = Banner
+
+local BannerTitle = Instance.new("TextLabel")
+BannerTitle.Size = UDim2.new(1, -30, 0, 32)
+BannerTitle.Position = UDim2.new(0, 15, 0, 18)
+BannerTitle.BackgroundTransparency = 1
+BannerTitle.Text = "JUNIX HUB"
+BannerTitle.TextColor3 = WHITE
+BannerTitle.TextSize = 25
+BannerTitle.Font = Enum.Font.GothamBold
+BannerTitle.Parent = Banner
+
+local BannerSub = Instance.new("TextLabel")
+BannerSub.Size = UDim2.new(1, -30, 0, 20)
+BannerSub.Position = UDim2.new(0, 15, 0, 51)
+BannerSub.BackgroundTransparency = 1
+BannerSub.Text = "Welcome to your dashboard"
+BannerSub.TextColor3 = GRAY
+BannerSub.TextSize = 12
+BannerSub.Font = Enum.Font.Gotham
+BannerSub.Parent = Banner
+
+--// Quick Features
+local FeatureBox = Instance.new("Frame")
+FeatureBox.Size = UDim2.new(1, 0, 0, 285)
+FeatureBox.Position = UDim2.new(0, 0, 0, 100)
+FeatureBox.BackgroundColor3 = PANEL
+FeatureBox.BorderSizePixel = 0
+FeatureBox.Parent = Content
+
+local FeatureCorner = Instance.new("UICorner")
+FeatureCorner.CornerRadius = UDim.new(0, 10)
+FeatureCorner.Parent = FeatureBox
+
+local FeatureTitle = Instance.new("TextLabel")
+FeatureTitle.Size = UDim2.new(1, -30, 0, 30)
+FeatureTitle.Position = UDim2.new(0, 15, 0, 10)
+FeatureTitle.BackgroundTransparency = 1
+FeatureTitle.Text = "⚡  Quick Features"
+FeatureTitle.TextColor3 = WHITE
+FeatureTitle.TextSize = 16
+FeatureTitle.Font = Enum.Font.GothamBold
+FeatureTitle.TextXAlignment = Enum.TextXAlignment.Left
+FeatureTitle.Parent = FeatureBox
+
+local features = {
+	"Auto Buy Seeds",
+	"Auto Place Egg",
+	"Auto Sell Fruits",
+	"Auto Hatch Egg",
+	"Auto Collect / Harvest",
+	"Auto Buy Shops",
+	"Auto Water",
+	"Select Fruit"
+}
+
+local function createFeature(name, index)
+	local column = (index - 1) % 2
+	local row = math.floor((index - 1) / 2)
+
+	local Button = Instance.new("TextButton")
+	Button.Size = UDim2.new(0, 195, 0, 45)
+	Button.Position = UDim2.new(0, 10 + column * 205, 0, 48 + row * 55)
+	Button.BackgroundColor3 = PANEL2
+	Button.BorderSizePixel = 0
+	Button.Text = name
+	Button.TextColor3 = WHITE
+	Button.TextSize = 12
+	Button.Font = Enum.Font.GothamMedium
+	Button.TextXAlignment = Enum.TextXAlignment.Left
+	Button.Parent = FeatureBox
+
+	local Corner = Instance.new("UICorner")
+	Corner.CornerRadius = UDim.new(0, 8)
+	Corner.Parent = Button
+
+	local Toggle = Instance.new("Frame")
+	Toggle.Size = UDim2.new(0, 34, 0, 18)
+	Toggle.Position = UDim2.new(1, -45, 0.5, -9)
+	Toggle.BackgroundColor3 = Color3.fromRGB(40, 55, 75)
+	Toggle.Parent = Button
+
+	local ToggleCorner = Instance.new("UICorner")
+	ToggleCorner.CornerRadius = UDim.new(1, 0)
+	ToggleCorner.Parent = Toggle
+
+	local Dot = Instance.new("Frame")
+	Dot.Size = UDim2.new(0, 14, 0, 14)
+	Dot.Position = UDim2.new(0, 2, 0.5, -7)
+	Dot.BackgroundColor3 = Color3.fromRGB(150, 180, 215)
+	Dot.Parent = Toggle
+
+	local DotCorner = Instance.new("UICorner")
+	DotCorner.CornerRadius = UDim.new(1, 0)
+	DotCorner.Parent = Dot
+
+	local enabled = false
+
+	Button.MouseButton1Click:Connect(function()
+		enabled = not enabled
+
+		if enabled then
+			Toggle.BackgroundColor3 = BLUE
+			Dot.BackgroundColor3 = WHITE
+			Dot.Position = UDim2.new(1, -16, 0.5, -7)
+		else
+			Toggle.BackgroundColor3 = Color3.fromRGB(40, 55, 75)
+			Dot.BackgroundColor3 = Color3.fromRGB(150, 180, 215)
+			Dot.Position = UDim2.new(0, 2, 0.5, -7)
+		end
+	end)
+end
+
+for i, feature in ipairs(features) do
+	createFeature(feature, i)
+end
+
+--// Profile panel
+local Profile = Instance.new("Frame")
+Profile.Size = UDim2.new(0, 155, 0, 390)
+Profile.Position = UDim2.new(1, -165, 0, 78)
+Profile.BackgroundColor3 = PANEL
+Profile.BorderSizePixel = 0
+Profile.Parent = Main
+
+local ProfileCorner = Instance.new("UICorner")
+ProfileCorner.CornerRadius = UDim.new(0, 10)
+ProfileCorner.Parent = Profile
+
+local ProfileTitle = Instance.new("TextLabel")
+ProfileTitle.Size = UDim2.new(1, -20, 0, 35)
+ProfileTitle.Position = UDim2.new(0, 10, 0, 10)
+ProfileTitle.BackgroundTransparency = 1
+ProfileTitle.Text = "👤  Profile / Status"
+ProfileTitle.TextColor3 = WHITE
+ProfileTitle.TextSize = 14
+ProfileTitle.Font = Enum.Font.GothamBold
+ProfileTitle.TextXAlignment = Enum.TextXAlignment.Left
+ProfileTitle.Parent = Profile
+
+--// Avatar
+local Avatar = Instance.new("ImageLabel")
+Avatar.Size = UDim2.new(0, 70, 0, 70)
+Avatar.Position = UDim2.new(0.5, -35, 0, 55)
+Avatar.BackgroundColor3 = PANEL2
+Avatar.Parent = Profile
+
+local AvatarCorner = Instance.new("UICorner")
+AvatarCorner.CornerRadius = UDim.new(1, 0)
+AvatarCorner.Parent = Avatar
+
+local avatarUrl = "https://www.roblox.com/headshot-thumbnail/image?userId="
+	.. Player.UserId .. "&width=150&height=150&format=png"
+
+Avatar.Image = avatarUrl
+
+--// Username
+local UserName = Instance.new("TextLabel")
+UserName.Size = UDim2.new(1, -20, 0, 25)
+UserName.Position = UDim2.new(0, 10, 0, 130)
+UserName.BackgroundTransparency = 1
+UserName.Text = Player.DisplayName
+UserName.TextColor3 = WHITE
+UserName.TextSize = 16
+UserName.Font = Enum.Font.GothamBold
+UserName.Parent = Profile
+
+local Handle = Instance.new("TextLabel")
+Handle.Size = UDim2.new(1, -20, 0, 20)
+Handle.Position = UDim2.new(0, 10, 0, 153)
+Handle.BackgroundTransparency = 1
+Handle.Text = "@" .. Player.Name
+Handle.TextColor3 = BLUE2
+Handle.TextSize = 12
+Handle.Font = Enum.Font.Gotham
+Handle.Parent = Profile
+
+--// Online badge
+local Online = Instance.new("TextLabel")
+Online.Size = UDim2.new(0, 75, 0, 25)
+Online.Position = UDim2.new(0.5, -37, 0, 180)
+Online.BackgroundColor3 = Color3.fromRGB(15, 65, 50)
+Online.Text = "● Online"
+Online.TextColor3 = GREEN
+Online.TextSize = 11
+Online.Font = Enum.Font.GothamMedium
+Online.Parent = Profile
+
+local OnlineCorner = Instance.new("UICorner")
+OnlineCorner.CornerRadius = UDim.new(1, 0)
+OnlineCorner.Parent = Online
+
+--// Profile information
+local Info = Instance.new("TextLabel")
+Info.Size = UDim2.new(1, -20, 0, 115)
+Info.Position = UDim2.new(0, 10, 0, 220)
+Info.BackgroundTransparency = 1
+Info.Text =
+	"Display Name\n" .. Player.DisplayName ..
+	"\n\nUser ID\n" .. tostring(Player.UserId) ..
+	"\n\nAccount Age\n" .. tostring(Player.AccountAge) .. " days"
+Info.TextColor3 = GRAY
+Info.TextSize = 11
+Info.Font = Enum.Font.Gotham
+Info.TextXAlignment = Enum.TextXAlignment.Left
+Info.TextYAlignment = Enum.TextYAlignment.Top
+Info.Parent = Profile
+
+--// Dragging
+local dragging = false
+local dragStart
+local startPos
+
+Top.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+
+		dragging = true
+		dragStart = input.Position
+		startPos = Main.Position
+	end
+end)
+
+Top.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+		or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	) then
+
+		local delta = input.Position - dragStart
+
+		Main.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+print("JUNIX HUB GUI loaded successfully.")
